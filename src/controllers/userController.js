@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
 const { userRegisterService } = require("../services/userService");
 const { errorResponse, successResponse } = require("../config/response");
-const { hashPassword } = require("../helpers/hashPassword");
+const { hashPassword, comparePassword } = require("../helpers/hashPassword");
 
 const userRegister = async (req, res) => {
   try {
@@ -22,7 +22,25 @@ const userRegister = async (req, res) => {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
   }
 };
-const login = async (req, res) => {};
+const login = async (req, res) => {
+  try {
+    const user = req.body;
+    const foundUser = await findUserByEmailService(user.email);
+    if (!foundUser) {
+      return errorResponse({ res, message: "User not found", code: httpStatus.NOT_FOUND });
+    }
+    const match = await comparePassword(user.password, foundUser.password);
+    if (!match) {
+      return errorResponse({ res, message: "Invalid password", code: httpStatus.UNAUTHORIZED });
+    }
+    
+    return successResponse({ res, message: "Login successful", data: foundUser, code: httpStatus.OK });
+    
+  } catch (error) {
+    return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
+    
+  }
+};
 const userDetails = async (req, res) => {};
 const updateUser = async (req, res) => {};
 const deleteUser = async (req, res) => {};
