@@ -1,10 +1,11 @@
 const connectDB = require("./config/db");
 const app = require("./app");
+const userRoutes = require("./routes/userRoutes");
 
 connectDB()
 .then(() => {
     app.listen(process.env.PORT, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
+        console.log(`Server running on port http://localhost:${process.env.PORT}`);
     });
 })
 .catch((error) => {
@@ -12,6 +13,20 @@ connectDB()
     process.exit(1);
 });
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
+app.get("/", (_, res) => {
+    res.send("Welcome to the Chating API");
 });
+
+// Routes
+app.use("/api/user/", userRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Something broke!");
+  });
+  
+  // 404 middleware
+  app.use((req, res) => {
+    res.status(404).send("Page not found");
+  });

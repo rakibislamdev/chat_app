@@ -11,9 +11,12 @@
   "author": "Rakib",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "http-status": "^1.7.4",
+    "joi": "^17.13.3",
     "mongoose": "^8.5.1"
   },
   "devDependencies": {
