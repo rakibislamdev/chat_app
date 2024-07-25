@@ -18,6 +18,17 @@ const userRegValidation = async (req, res, next) => {
   await commonValidation(schema, req, res, next);
 };
 
+const userLoginValidation = async (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string().required().email(),
+        password: Joi.string().min(6).required(),
+    }).options({
+        abortEarly: false,
+    });
+    await commonValidation(schema, req, res, next);
+};
+
 module.exports = {
     userRegValidation,
+    userLoginValidation
 };

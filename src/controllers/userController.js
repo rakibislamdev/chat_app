@@ -1,7 +1,8 @@
 const httpStatus = require("http-status");
-const { userRegisterService } = require("../services/userService");
-const { errorResponse, successResponse } = require("../config/response");
+const { userRegisterService, findUserByEmailService } = require("../services/userService");
+const { errorResponse, successResponse, successResponseWithToken } = require("../config/response");
 const { hashPassword, comparePassword } = require("../helpers/hashPassword");
+const { generateAccessToken, generateRefreshToken } = require("../config/token");
 
 const userRegister = async (req, res) => {
   try {
@@ -22,7 +23,7 @@ const userRegister = async (req, res) => {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
   }
 };
-const login = async (req, res) => {
+const userLogin = async (req, res) => {
   try {
     const user = req.body;
     const foundUser = await findUserByEmailService(user.email);
@@ -33,8 +34,12 @@ const login = async (req, res) => {
     if (!match) {
       return errorResponse({ res, message: "Invalid password", code: httpStatus.UNAUTHORIZED });
     }
-    
-    return successResponse({ res, message: "Login successful", data: foundUser, code: httpStatus.OK });
+
+    // Generate access token and refresh token
+    const accessToken = await generateAccessToken(foundUser);
+    const refreshToken = await generateRefreshToken(foundUser);
+
+    return successResponseWithToken({ res, message: "Login successful", data: foundUser, accessToken, refreshToken, code: httpStatus.OK });
     
   } catch (error) {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
@@ -47,7 +52,7 @@ const deleteUser = async (req, res) => {};
 
 module.exports = {
   userRegister,
-  login,
+  userLogin,
   userDetails,
   updateUser,
   deleteUser,
