@@ -17,7 +17,16 @@ const findUserByEmailService = async (email) => {
   }
 };
 
+const findUserByIdService = async (id) => {
+  try {
+    return await User.findById(id);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
     userRegisterService,
-    findUserByEmailService
+    findUserByEmailService,
+    findUserByIdService
 }
