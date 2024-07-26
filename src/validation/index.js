@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { errorResponse } = require("../config/response");
+const { errorResponse } = require("../helpers/response");
 
 const commonValidation = async (schema, req, res, next) => {
   try {

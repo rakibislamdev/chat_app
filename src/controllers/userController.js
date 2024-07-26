@@ -1,23 +1,32 @@
 const httpStatus = require("http-status");
 const { userRegisterService, findUserByEmailService } = require("../services/userService");
-const { errorResponse, successResponse, successResponseWithToken } = require("../config/response");
 const { hashPassword, comparePassword } = require("../helpers/hashPassword");
-const { generateAccessToken, generateRefreshToken } = require("../config/token");
+const { successResponse, errorResponse, successResponseWithToken } = require("../helpers/response");
+const { generateAccessToken, generateRefreshToken } = require("../helpers/token");
 
 const userRegister = async (req, res) => {
   try {
     const user = req.body;
+   
+    // For image
+    if (req.file) {
+      user.avatar = req.file.path;
+    }
+
+    // Hash password
     const hash_pass = hashPassword(user.password);
     user.password = hash_pass;
+
+    // Call the service
     const newUser = await userRegisterService(user);
 
+    // Return success response
     return successResponse({
       res,
       message: "User registered successfully",
       data: newUser,
       code: httpStatus.CREATED,
     });
-
 
   } catch (error) {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
