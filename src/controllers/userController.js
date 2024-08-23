@@ -1,12 +1,19 @@
 const httpStatus = require("http-status");
-const { userRegisterService, findUserByEmailService, findUserByIdService } = require("../services/userService");
+const { userRegisterService, findUserByEmailService, findUserByIdService, updateUserService } = require("../services/userService");
 const { hashPassword, comparePassword } = require("../helpers/hashPassword");
 const { successResponse, errorResponse, successResponseWithToken } = require("../helpers/response");
 const { generateAccessToken, generateRefreshToken } = require("../helpers/token");
+const fs = require("fs");
 
 const userRegister = async (req, res) => {
   try {
-    const user = req.body;
+    const user = req.body || {};
+
+    // Check if user exists
+    const userExists = await findUserByEmailService(user.email);
+    if (userExists) {
+      return errorResponse({ res, message: "User already exists", code: httpStatus.CONFLICT });
+    }
    
     // For image
     if (req.file) {
@@ -71,7 +78,30 @@ const userDetails = async (req, res) => {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
   }
 };
-const updateUser = async (req, res) => {};
+
+const updateUser = async (req, res) => {
+  try {
+    const user = req.body;
+    // Check if user exists
+    const userExists = await findUserByIdService(user.id);
+    if (!userExists) {
+      return errorResponse({ res, message: "User not found", code: httpStatus.NOT_FOUND });
+    }
+
+    // For image
+    if (req.file) {
+      // Delete the old image
+      if (userExists.avatar) {
+        fs.unlinkSync(userExists.avatar);
+      }
+      user.avatar = req.file.path;
+    }
+    const updatedUser = await updateUserService(id, user);
+    return successResponse({ res, message: "User updated successfully", data: updatedUser, code: httpStatus.OK });
+  } catch (error) {
+    return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
+  }
+};
 const deleteUser = async (req, res) => {};
 
 module.exports = {

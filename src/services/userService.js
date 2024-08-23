@@ -25,8 +25,18 @@ const findUserByIdService = async (id) => {
   }
 };
 
+const updateUserService = async (id, data) => {
+  try {
+    return await User.findByIdAndUpdate(id, data, { new: true });
+  } catch (error) {
+    throw new Error(error);
+  }
+
+};
+
 module.exports = {
     userRegisterService,
     findUserByEmailService,
-    findUserByIdService
+    findUserByIdService,
+    updateUserService
 }
