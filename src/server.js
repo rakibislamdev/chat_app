@@ -1,6 +1,7 @@
 const connectDB = require("./config/db");
 const app = require("./app");
 const userRoutes = require("./routes/userRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 connectDB()
 .then(() => {
@@ -19,6 +20,7 @@ app.get("/", (_, res) => {
 
 // Routes
 app.use("/api/user/", userRoutes);
+app.use("/api/message/", messageRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
