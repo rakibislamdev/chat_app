@@ -1,10 +1,10 @@
 const express = require("express");
-const { messageValidation } = require("../validation/messageValidation");
+const { messageValidation, chatHistoryValidation } = require("../validation/messageValidation");
 const { sendMessage, getChatHistory } = require("../controllers/messageController");
-const { verifyToken } = require("../helpers/token");
+const jwtMiddleware = require("../utils/authMiddleware");
 
 const messageRoutes = express.Router();
-messageRoutes.post("/send", messageValidation, verifyToken, sendMessage);
-messageRoutes.post("/history", verifyToken, getChatHistory);
+messageRoutes.post("/send", messageValidation, jwtMiddleware, sendMessage);
+messageRoutes.post("/history", chatHistoryValidation, jwtMiddleware, getChatHistory);
 
 module.exports = messageRoutes;

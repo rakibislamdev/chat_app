@@ -13,6 +13,17 @@ const messageValidation = async (req, res, next) => {
     await commonValidation(schema, req, res, next);
 };
 
+const chatHistoryValidation = async (req, res, next) => {
+    const schema = Joi.object({
+        sender: Joi.string().required(),
+        receiver: Joi.string().required(),
+    }).options({
+        abortEarly: false,
+    });
+    await commonValidation(schema, req, res, next);
+};
+
 module.exports = {
     messageValidation,
+    chatHistoryValidation
 };
