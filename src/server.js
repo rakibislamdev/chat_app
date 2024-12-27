@@ -15,7 +15,7 @@ connectDB()
 });
 
 app.get("/", (_, res) => {
-    res.send("Welcome to the Chating API");
+    res.send("Welcome to the Chat API");
 });
 
 // Routes

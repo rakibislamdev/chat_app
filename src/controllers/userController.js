@@ -68,7 +68,8 @@ const userLogin = async (req, res) => {
 
 const userDetails = async (req, res) => {
   try {
-    const {id} = req.query;
+    const id  = req.params.id || {};
+    
     const user = await findUserByIdService(id);
     if (!user) {
       return errorResponse({ res, message: "User not found", code: httpStatus.NOT_FOUND });
