@@ -82,7 +82,8 @@ const userDetails = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const user = req.body;
+    const user = req.body || {};
+    
     // Check if user exists
     const userExists = await findUserByIdService(user.id);
     if (!userExists) {
@@ -97,7 +98,7 @@ const updateUser = async (req, res) => {
       }
       user.avatar = req.file.path;
     }
-    const updatedUser = await updateUserService(id, user);
+    const updatedUser = await updateUserService(user?.id, user);
     return successResponse({ res, message: "User updated successfully", data: updatedUser, code: httpStatus.OK });
   } catch (error) {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
