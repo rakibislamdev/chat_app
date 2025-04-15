@@ -12,7 +12,6 @@ const userRegValidation = async (req, res, next) => {
     country: Joi.string().optional(),
     city: Joi.string().optional(),
     address: Joi.string().optional(),
-    status: Joi.string().optional(),
   }).options({
     abortEarly: false,
   });
@@ -45,8 +44,18 @@ const userUpdateValidation = async (req, res, next) => {
     await commonValidation(schema, req, res, next);
 };
 
+const userDetailsValidation = async (req, res, next) => {
+    const schema = Joi.object({
+        id: Joi.string().required(),
+    }).options({
+        abortEarly: false,
+    });
+    await commonValidation(schema, req, res, next);
+};
+
 module.exports = {
     userRegValidation,
     userLoginValidation,
     userUpdateValidation,
+    userDetailsValidation
 };

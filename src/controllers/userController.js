@@ -14,7 +14,7 @@ const userRegister = async (req, res) => {
     if (userExists) {
       return errorResponse({ res, message: "User already exists", code: httpStatus.CONFLICT });
     }
-   
+
     // For image
     if (req.file) {
       user.avatar = req.file.path;
@@ -58,17 +58,17 @@ const userLogin = async (req, res) => {
     const refreshToken = await generateRefreshToken(foundUser);
 
     return successResponseWithToken({ res, message: "Login successful", data: foundUser, accessToken, refreshToken, code: httpStatus.OK });
-    
+
   } catch (error) {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
-    
+
   }
 };
 
 
 const userDetails = async (req, res) => {
   try {
-    const {id} = req.params || {};
+    const { id } = req.params || {};
     const user = await findUserByIdService(id);
     if (!user) {
       return errorResponse({ res, message: "User not found", code: httpStatus.NOT_FOUND });
@@ -81,7 +81,8 @@ const userDetails = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const user = req.body;
+    const user = req.body || {};
+
     // Check if user exists
     const userExists = await findUserByIdService(user.id);
     if (!userExists) {
@@ -96,13 +97,13 @@ const updateUser = async (req, res) => {
       }
       user.avatar = req.file.path;
     }
-    const updatedUser = await updateUserService(id, user);
+    const updatedUser = await updateUserService(user?.id, user);
     return successResponse({ res, message: "User updated successfully", data: updatedUser, code: httpStatus.OK });
   } catch (error) {
     return errorResponse({ res, message: error.message, code: httpStatus.BAD_REQUEST });
   }
 };
-const deleteUser = async (req, res) => {};
+const deleteUser = async (req, res) => { };
 
 module.exports = {
   userRegister,
