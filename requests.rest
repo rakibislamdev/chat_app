@@ -1,0 +1,40 @@
+####################################################
+#                     Login 
+####################################################
+POST http://localhost:5000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "sakib@gmail.com",
+    "password": "A12345"
+}
+
+
+####################################################
+#                     Register
+####################################################
+POST http://localhost:5000/api/user/register
+Content-Type: application/json
+
+{
+    "name": "Sakib",
+    "email": "sakib@gmail.com",
+    "password": "A12345",
+    "avatar": "https://example.com/avatar.jpg",
+    "phone": "01712345678",
+    "country": "Bangladesh",
+    "city": "Dhaka",
+    "address": "Dhaka",
+    "status": "active"
+}
+
+# name, email, password are required fields
+# avatar, phone, country, city, address, status are optional fields
+
+
+
+####################################################
+#                     Get user details
+####################################################
+GET  http://localhost:5000/api/user/user-details/67fba386fbaa97f3af6e1839
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmJhMzg2ZmJhYTk3ZjNhZjZlMTgzOSIsImVtYWlsIjoic2FraWJAZ21haWwuY29tIiwiaWF0IjoxNzQ0Njg5NjIyLCJleHAiOjE3NDY0MTc2MjJ9.7THu-ehkWsMdgMZxJJFqCVUv-aK7EJ8ehFSR9TcTtcI
